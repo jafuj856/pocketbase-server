@@ -1,0 +1,20 @@
+FROM alpine:latest
+
+WORKDIR /app
+
+# Install curl and unzip
+RUN apk add --no-cache curl unzip
+
+# Download PocketBase latest
+RUN curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/latest/download/pocketbase_amd64.zip && \
+    unzip pocketbase.zip && \
+    chmod +x pocketbase && \
+    rm pocketbase.zip
+
+# Copy any migrations or seed files here if needed
+COPY pb_data /app/pb_data
+
+# Expose the port
+EXPOSE 8090
+
+CMD ["./pocketbase", "serve", "--http=0.0.0.0:8090"]
